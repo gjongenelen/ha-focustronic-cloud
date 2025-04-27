@@ -1,0 +1,10 @@
+{
+  "domain": "focustronic-cloud",
+  "name": "FocusTronic Cloud",
+  "version": "1.0.0",
+  "documentation": "https://github.com/gjongenelen/ha-focustronic-cloud",
+  "dependencies": [],
+  "codeowners": ["@gjongenelen"],
+  "requirements": ["requests"],
+  "config_flow": true
+}

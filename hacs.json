@@ -1,0 +1,7 @@
+{
+  "name": "FocusTronic-cloud",
+  "content_in_root": false,
+  "domains": ["focustronic"],
+  "country": "NL",
+  "homeassistant": "2023.0.0"
+}
