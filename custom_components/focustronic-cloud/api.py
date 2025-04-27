@@ -104,6 +104,12 @@ class FocustronicApi(BaseApi):
         return await self.get("/aquarium-tanks/0")
 
 
+def Generate(iterable, func):
+    """
+    Generates a list of instances based on the iterable and the function provided.
+    """
+    return [func(i) for i in iterable]
+
 class MastertronicApi:
     def __init__(self, api: FocustronicApi, device, id):
         self.id = id
@@ -117,7 +123,11 @@ class MastertronicApi:
             "sensor": [
                 MastertronicStatusSensor(self.device),
                 MastertronicStatusTextSensor(self.device),
-                MastertroniTestCountSensor(self.device),
+                MastertronicTestCountSensor(self.device),
+                MastertronicHoseCountSensor(self.device),
+                MastertronicNeedleCountSensor(self.device),
+                MastertronicHoseCountLimitSensor(self.device),
+                MastertronicNeedleCountLimitSensor(self.device),
 
                 MastertroniParamValueSensor(self.device, "ca", "mg/L"),
                 MastertroniParamValueSensor(self.device, "mg", "mg/L"),
@@ -128,6 +138,9 @@ class MastertronicApi:
                 MastertroniParamValueSensor(self.device, "kh", "dKH"),
                 MastertroniParamValueSensor(self.device, "i", "mg/L"),
                 MastertroniParamValueSensor(self.device, "amm", "mg/L"),
+
+                *Generate(range(1, 13), lambda i: MastertroniVialReagentSensor(self.device, i)),
+                *Generate(range(1, 13), lambda i: MastertroniVialVolumeSensor(self.device, i)),
             ],
             "switch": [
             ],

@@ -51,12 +51,13 @@ class MastertronicStatusTextSensor(GenericSensor):
     def handle_api_data(self, data):
         self._state = {
             "I": "Idle",
+            "T-2": "Testing MG",
             "T-5": "Testing OLI",
         }.get(data["mcu_status"], data["mcu_status"])
         self._available = data["is_active"]
         self.async_write_ha_state()
 
-class MastertroniTestCountSensor(GenericSensor):
+class MastertronicTestCountSensor(GenericSensor):
     def __init__(self, device):
         super().__init__(device, f'{device["serial_number"]}_lifetime_test_count', "Test count")
         self._state = None
@@ -64,6 +65,53 @@ class MastertroniTestCountSensor(GenericSensor):
 
     def handle_api_data(self, data):
         self._state = data["lifetime_test_count"]
+        self._available = data["is_active"]
+        self.async_write_ha_state()
+
+class MastertronicHoseCountSensor(GenericSensor):
+    def __init__(self, device):
+        super().__init__(device, f'{device["serial_number"]}_current_hose_count', "Hose count")
+        self._state = None
+        self._attr_entity_category = EntityCategory.DIAGNOSTIC
+
+    def handle_api_data(self, data):
+        self._state = data["settings"]["current_hose_count"]
+        self._available = data["is_active"]
+        self.async_write_ha_state()
+
+
+class MastertronicNeedleCountSensor(GenericSensor):
+    def __init__(self, device):
+        super().__init__(device, f'{device["serial_number"]}_current_needle_count', "Needle count")
+        self._state = None
+        self._attr_entity_category = EntityCategory.DIAGNOSTIC
+
+    def handle_api_data(self, data):
+        self._state = data["settings"]["current_needle_count"]
+        self._available = data["is_active"]
+        self.async_write_ha_state()
+
+
+class MastertronicNeedleCountLimitSensor(GenericSensor):
+    def __init__(self, device):
+        super().__init__(device, f'{device["serial_number"]}_needle_count_limit', "Needle count limit")
+        self._state = None
+        self._attr_entity_category = EntityCategory.DIAGNOSTIC
+
+    def handle_api_data(self, data):
+        self._state = data["settings"]["needle_count_limit"]
+        self._available = data["is_active"]
+        self.async_write_ha_state()
+
+
+class MastertronicHoseCountLimitSensor(GenericSensor):
+    def __init__(self, device):
+        super().__init__(device, f'{device["serial_number"]}_hose_count_limit', "Hose count limit")
+        self._state = None
+        self._attr_entity_category = EntityCategory.DIAGNOSTIC
+
+    def handle_api_data(self, data):
+        self._state = data["settings"]["hose_count_limit"]
         self._available = data["is_active"]
         self.async_write_ha_state()
 
@@ -81,6 +129,35 @@ class MastertroniParamValueSensor(GenericSensor):
                     self._state = 0
                 else:
                     self._state = param["value"] / param["multiply_factor"]
+                break
+        self._available = data["is_active"]
+        self.async_write_ha_state()
+
+class MastertroniVialReagentSensor(GenericSensor):
+    def __init__(self, device, id):
+        super().__init__(device, f'{device["serial_number"]}_vial{id}_reagent', f'Vial{id} reagent')
+        self.id = id
+        self._state = None
+
+    def handle_api_data(self, data):
+        for vial in data["parameter-information"]["vials"]:
+            if vial["vial_id"] == self.id:
+                self._state = vial["reagent_key"]
+                break
+        self._available = data["is_active"]
+        self.async_write_ha_state()
+
+class MastertroniVialVolumeSensor(GenericSensor):
+    def __init__(self, device, id):
+        super().__init__(device, f'{device["serial_number"]}_vial{id}_remaining_volume', f'Vial{id} remaining volume')
+        self.id = id
+        self._unit = "ml"
+        self._state = None
+
+    def handle_api_data(self, data):
+        for vial in data["parameter-information"]["vials"]:
+            if vial["vial_id"] == self.id:
+                self._state = vial["remaining_volume"] / 100
                 break
         self._available = data["is_active"]
         self.async_write_ha_state()
