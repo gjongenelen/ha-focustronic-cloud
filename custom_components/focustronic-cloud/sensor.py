@@ -1,7 +1,6 @@
 import logging
 from homeassistant.helpers.entity import EntityCategory
-from homeassistant.components.sensor import SensorEntity, SensorDeviceClass
-from homeassistant.const import UnitOfTemperature
+from homeassistant.components.sensor import SensorEntity, SensorDeviceClass, SensorStateClass
 from .const import DOMAIN
 
 _LOGGER = logging.getLogger(__name__)
@@ -59,9 +58,11 @@ class MastertronicStatusTextSensor(GenericSensor):
             "T-5": "Testing OLI",
             "T-6": "Testing KH",
             "T-100": "Testing NO3",
+            "T-911": "Stirring",
             "T-912": "912?",
             "T-913": "913?",
             "T-918": "918?",
+            "T-920": "Calibrating OLI",
             "T-991": "991?",
             "T-992": "992?",
             "T-993": "993?",
@@ -133,6 +134,7 @@ class MastertroniParamValueSensor(GenericSensor):
         self.param = param
         self._unit = unit
         self._state = None
+        self._attr_state_class = SensorStateClass.MEASUREMENT
 
     def handle_api_data(self, data):
         for param in data["parameter-information"]["parameters"]:
