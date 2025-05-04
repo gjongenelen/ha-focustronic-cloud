@@ -50,9 +50,21 @@ class MastertronicStatusTextSensor(GenericSensor):
 
     def handle_api_data(self, data):
         self._state = {
+            "C": "Calibrating",
             "I": "Idle",
+            "U": "U?",
+            "T-1": "Testing CA",
             "T-2": "Testing MG",
+            "T-3": "Testing PO4",
             "T-5": "Testing OLI",
+            "T-6": "Testing KH",
+            "T-100": "Testing NO3",
+            "T-912": "912?",
+            "T-913": "913?",
+            "T-918": "918?",
+            "T-991": "991?",
+            "T-992": "992?",
+            "T-993": "993?",
         }.get(data["mcu_status"], data["mcu_status"])
         self._available = data["is_active"]
         self.async_write_ha_state()
