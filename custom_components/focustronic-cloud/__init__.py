@@ -34,6 +34,15 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
             "serial_number": mastertronic["serial_number"]
         }, mastertronic["id"]))
 
+    for alkatronic in tank["data"]["alkatronics"]:
+        apis.append(AlkatronicApi(apiI, {
+            "identifiers": {(DOMAIN, alkatronic["id"])},
+            "name": alkatronic["friendly_name"],
+            "sw_version": alkatronic["firmware_version"],
+            "hw_version": alkatronic["mcu_version"],
+            "serial_number": alkatronic["serial_number"]
+        }, alkatronic["id"]))
+
     stop_event = asyncio.Event()
 
     async def poll_data():

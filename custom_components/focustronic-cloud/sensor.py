@@ -1,6 +1,8 @@
 import logging
-from homeassistant.helpers.entity import EntityCategory
+
 from homeassistant.components.sensor import SensorEntity, SensorDeviceClass, SensorStateClass
+from homeassistant.helpers.entity import EntityCategory
+
 from .const import DOMAIN
 
 _LOGGER = logging.getLogger(__name__)
@@ -11,6 +13,7 @@ async def async_setup_entry(hass, entry, async_add_entities):
         entities = api.factories["sensor"]
         async_add_entities(entities)
         api.api.add_entities(entities)
+
 
 class GenericSensor(SensorEntity):
     def __init__(self, device, id, name):
@@ -32,6 +35,7 @@ class GenericSensor(SensorEntity):
     def unit_of_measurement(self):
         return getattr(self, "_unit", None)
 
+
 class MastertronicStatusSensor(GenericSensor):
     def __init__(self, device):
         super().__init__(device, f'{device["serial_number"]}_status', "Status")
@@ -41,6 +45,7 @@ class MastertronicStatusSensor(GenericSensor):
         self._state = data["mcu_status"]
         self._available = data["is_active"]
         self.async_write_ha_state()
+
 
 class MastertronicStatusTextSensor(GenericSensor):
     def __init__(self, device):
@@ -66,9 +71,11 @@ class MastertronicStatusTextSensor(GenericSensor):
             "T-991": "991?",
             "T-992": "992?",
             "T-993": "993?",
+            "T-3128": "Testing pH",
         }.get(data["mcu_status"], data["mcu_status"])
         self._available = data["is_active"]
         self.async_write_ha_state()
+
 
 class MastertronicTestCountSensor(GenericSensor):
     def __init__(self, device):
@@ -80,6 +87,7 @@ class MastertronicTestCountSensor(GenericSensor):
         self._state = data["lifetime_test_count"]
         self._available = data["is_active"]
         self.async_write_ha_state()
+
 
 class MastertronicHoseCountSensor(GenericSensor):
     def __init__(self, device):
@@ -128,6 +136,7 @@ class MastertronicHoseCountLimitSensor(GenericSensor):
         self._available = data["is_active"]
         self.async_write_ha_state()
 
+
 class MastertroniParamValueSensor(GenericSensor):
     def __init__(self, device, param, unit):
         super().__init__(device, f'{device["serial_number"]}_{param}_value', f'Value of {param}')
@@ -147,6 +156,7 @@ class MastertroniParamValueSensor(GenericSensor):
         self._available = data["is_active"]
         self.async_write_ha_state()
 
+
 class MastertroniVialReagentSensor(GenericSensor):
     def __init__(self, device, id):
         super().__init__(device, f'{device["serial_number"]}_vial{id}_reagent', f'Vial{id} reagent')
@@ -160,6 +170,7 @@ class MastertroniVialReagentSensor(GenericSensor):
                 break
         self._available = data["is_active"]
         self.async_write_ha_state()
+
 
 class MastertroniVialVolumeSensor(GenericSensor):
     def __init__(self, device, id):

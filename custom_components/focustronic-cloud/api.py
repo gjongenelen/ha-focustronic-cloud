@@ -153,3 +153,34 @@ class MastertronicApi:
         param_data = await self.api.get(f'/devices/mastertronic/{self.id}/parameter-information')
         data["data"]["parameter-information"] = param_data["data"]
         self.api.update(data["data"])
+
+class AlkatronicApi:
+    def __init__(self, api: FocustronicApi, device, id):
+        self.id = id
+        self.api = api
+        self.device = device
+
+        self.factories = {
+            "binary_sensor": [
+                MastertronicActiveSensor(self.device),
+            ],
+            "sensor": [
+                MastertronicStatusSensor(self.device),
+                MastertronicStatusTextSensor(self.device),
+                MastertronicTestCountSensor(self.device),
+
+                MastertroniParamValueSensor(self.device, "kh", "dKH"),
+                MastertroniParamValueSensor(self.device, "ph", ""),
+                MastertroniParamValueSensor(self.device, "th", "°C"),
+            ],
+            "switch": [
+            ],
+            "number": [
+            ]
+        }
+
+    async def update(self):
+        data = await self.api.get(f'/devices/alkatronic/{self.id}')
+        param_data = await self.api.get(f'/devices/alkatronic/{self.id}/parameter-information')
+        data["data"]["parameter-information"] = param_data["data"]
+        self.api.update(data["data"])
