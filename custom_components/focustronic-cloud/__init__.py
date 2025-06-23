@@ -26,7 +26,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 
     apis = []
     for mastertronic in tank["data"]["mastertronics"]:
-        apis.append(MastertronicApi(apiI, {
+        apis.append(MastertronicApi(FocustronicApi(entry.data["token"]), {
             "identifiers": {(DOMAIN, mastertronic["id"])},
             "name": mastertronic["friendly_name"],
             "sw_version": mastertronic["firmware_version"],
@@ -35,7 +35,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         }, mastertronic["id"]))
 
     for alkatronic in tank["data"]["alkatronics"]:
-        apis.append(AlkatronicApi(apiI, {
+        apis.append(AlkatronicApi(FocustronicApi(entry.data["token"]), {
             "identifiers": {(DOMAIN, alkatronic["id"])},
             "name": alkatronic["friendly_name"],
             "sw_version": alkatronic["firmware_version"],
