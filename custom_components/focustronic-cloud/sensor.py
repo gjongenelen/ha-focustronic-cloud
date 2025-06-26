@@ -148,7 +148,9 @@ class MastertroniParamValueSensor(GenericSensor):
     def handle_api_data(self, data):
         for param in data["parameter-information"]["parameters"]:
             if param["parameter"] == f'{self.param.upper()}_VAL':
-                if param["value"] < 0:
+                if param["baselined_value"] > -1:
+                    self._state = param["baselined_value"] / param["multiply_factor"]
+                elif param["value"] < 0:
                     self._state = 0
                 else:
                     self._state = param["value"] / param["multiply_factor"]
