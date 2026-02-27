@@ -38,7 +38,7 @@ class BaseApi:
                     json=data,
                     headers={
                         "Content-Type": "application/json",
-                        "x-session-token": self.token
+                        "x-session-token": self.token,
                         "User-Agent": "Focustronic/1",
                     }
             ) as response:
@@ -55,7 +55,7 @@ class BaseApi:
                     json=data,
                     headers={
                         "Content-Type": "application/json",
-                        "x-session-token": self.token
+                        "x-session-token": self.token,
                         "User-Agent": "Focustronic/1",
                     }
             ) as response:
