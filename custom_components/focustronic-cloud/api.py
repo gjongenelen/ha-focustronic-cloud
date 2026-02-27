@@ -21,7 +21,8 @@ class BaseApi:
                     data=data,
                     headers={
                         "Content-Type": "application/json",
-                        "x-session-token": self.token
+                        "x-session-token": self.token,
+                        "User-Agent": "Focustronic/1",
                     }
             ) as response:
                 response.raise_for_status()
@@ -38,6 +39,7 @@ class BaseApi:
                     headers={
                         "Content-Type": "application/json",
                         "x-session-token": self.token
+                        "User-Agent": "Focustronic/1",
                     }
             ) as response:
                 response.raise_for_status()
@@ -54,6 +56,7 @@ class BaseApi:
                     headers={
                         "Content-Type": "application/json",
                         "x-session-token": self.token
+                        "User-Agent": "Focustronic/1",
                     }
             ) as response:
                 response.raise_for_status()
@@ -69,6 +72,7 @@ async def login(email, password):
                 f'{cloudUrl}/auth/login',
                 headers={
                     "Content-Type": "application/x-www-form-urlencoded; charset=utf-8",
+                    "User-Agent": "Focustronic/1",
                 },
                 data={
                     "email": email,
