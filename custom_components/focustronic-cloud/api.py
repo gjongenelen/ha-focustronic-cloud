@@ -78,6 +78,8 @@ async def login(email, password):
         ) as response:
             response.raise_for_status()
             data = await response.json()
+            if not isinstance(data.get("data"), dict):
+                raise Exception(f"Unexpected response: {data}")
             if not data["result"]:
                 raise Exception(f'Got false result on url /auth/login')
             return data["data"]["session_token"], data["data"]["user_hash"]
