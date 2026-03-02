@@ -53,7 +53,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
                 except Exception as e:
                     _LOGGER.warning("Failed to fetch_data: %s", e)
 
-            await asyncio.sleep(15)
+            await asyncio.sleep(60)
 
     task = asyncio.create_task(poll_data())
 
